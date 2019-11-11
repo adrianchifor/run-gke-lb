@@ -2,6 +2,8 @@
 
 Simple, auto-configuring, auto-scaling nginx container acting as a load balancer for your GKE node pool. Expose your GKE ingress controller/edge proxy without paying $18/month for a GCP LB.
 
+[![Run on Google Cloud](https://deploy.cloud.run/button.svg)](https://deploy.cloud.run)
+
 ## Configuration (env vars)
 ```
 GKE_CLUSTER (required) - name of your GKE cluster
