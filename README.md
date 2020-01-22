@@ -12,6 +12,7 @@ GKE_NODE_PORT (required) - node port of your ingress controller/edge proxy
 
 NGINX_TIMEOUT (optional, default 30s) - nginx timeout for proxy_pass
 NGINX_PROTOCOL (optional, default http) - nginx protocol for proxy_pass (set to 'https' if your ingress controller/edge proxy is listening over TLS)
+HEALTH_CHECK_TIMEOUT (optional, default 3) - node heath check timeout; if HC fails, node is removed from nginx upstream list until it's back online
 CHECK_INTERVAL (optional, default 30) - seconds between checks of GKE node pool IP changes
 ```
 
@@ -34,7 +35,7 @@ gcloud projects add-iam-policy-binding YOUR_PROJECT \
 
 ### Deploy container
 ```
-gcloud beta run deploy run-gke-lb --image eu.gcr.io/YOUR_PROJECT/run-gke-lb \
+gcloud run deploy run-gke-lb --image eu.gcr.io/YOUR_PROJECT/run-gke-lb \
   --region europe-west1 \
   --platform managed \
   --allow-unauthenticated \

@@ -9,6 +9,7 @@ fi
 
 NGINX_TIMEOUT=${NGINX_TIMEOUT:-30s}
 NGINX_PROTOCOL=${NGINX_PROTOCOL:-http}
+HEALTH_CHECK_TIMEOUT=${HEALTH_CHECK_TIMEOUT:-3}
 CHECK_INTERVAL=${CHECK_INTERVAL:-30}
 
 function getNodePoolIPs() {
@@ -17,6 +18,18 @@ function getNodePoolIPs() {
       --format="value(networkInterfaces[0].accessConfigs[0].natIP)" \
       --filter="name~'^gke-$GKE_CLUSTER-$GKE_NODE_POOL.*'"
   )
+}
+
+function healthCheck() {
+  local gke_ips=$1
+  local healthy_gke_ips=""
+
+  for ip in $gke_ips; do
+    timeout $HEALTH_CHECK_TIMEOUT bash -c "</dev/tcp/$ip/$GKE_NODE_PORT" 2> /dev/null \
+      && healthy_gke_ips+="$ip "
+  done
+
+  echo $healthy_gke_ips
 }
 
 function setNginxConfig() {
@@ -71,6 +84,7 @@ OLD_GKE_IPS=""
 
 while true; do
   GKE_IPS=$(getNodePoolIPs)
+  GKE_IPS=$(healthCheck "$GKE_IPS")
 
   if [[ "$OLD_GKE_IPS" != "$GKE_IPS" ]]; then
     echo "$(date) -- GKE IPs: $GKE_IPS"
