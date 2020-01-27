@@ -32,6 +32,24 @@ function healthCheck() {
   echo $healthy_gke_ips
 }
 
+function initNginxConfig() {
+  cat <<EOF > /nginx.conf
+events {}
+
+http {
+  server_tokens off;
+  server {
+    listen 8080;
+    listen [::]:8080;
+
+    location / {
+      return 204;
+    }
+  }
+}
+EOF
+}
+
 function setNginxConfig() {
   local gke_ips=$1
   local upstream=""
@@ -79,6 +97,9 @@ function reloadNginx() {
     nginx -s reload
   fi
 }
+
+initNginxConfig
+checkAndRunNginx
 
 OLD_GKE_IPS=""
 
