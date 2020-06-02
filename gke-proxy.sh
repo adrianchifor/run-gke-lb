@@ -16,7 +16,7 @@ function getNodePoolIPs() {
   echo $(
     gcloud compute instances list \
       --format="value(networkInterfaces[0].accessConfigs[0].natIP)" \
-      --filter="name~'^gke-$GKE_CLUSTER-$GKE_NODE_POOL.*'"
+      --filter="name:gke-$GKE_CLUSTER-$GKE_NODE_POOL*"
   )
 }
 
@@ -25,8 +25,16 @@ function healthCheck() {
   local healthy_gke_ips=""
 
   for ip in $gke_ips; do
-    timeout $HEALTH_CHECK_TIMEOUT bash -c "</dev/tcp/$ip/$GKE_NODE_PORT" 2> /dev/null \
-      && healthy_gke_ips+="$ip "
+    timeout $HEALTH_CHECK_TIMEOUT bash -c "</dev/tcp/$ip/$GKE_NODE_PORT" 2> /dev/null
+    if [ $? -eq 0 ]; then
+      healthy_gke_ips+="$ip "
+    else
+      # 'bash -c ...' doesn't die when timeout sends the SIGTERM
+      # So we need to manually cleanup, otherwise it locks the function return
+      for process in $(ps aux | grep "bash -c </dev/tcp" | awk '{print $1}'); do 
+        kill "$process" 2> /dev/null
+      done
+    fi
   done
 
   echo $healthy_gke_ips
