@@ -7,17 +7,26 @@ if [[ -z $GKE_CLUSTER || -z $GKE_NODE_POOL || -z $GKE_NODE_PORT ]]; then
   exit 1
 fi
 
+PRIVATE_CLUSTER=${PRIVATE_CLUSTER:-false}
 NGINX_TIMEOUT=${NGINX_TIMEOUT:-30s}
 NGINX_PROTOCOL=${NGINX_PROTOCOL:-http}
 HEALTH_CHECK_TIMEOUT=${HEALTH_CHECK_TIMEOUT:-3}
 CHECK_INTERVAL=${CHECK_INTERVAL:-30}
 
 function getNodePoolIPs() {
-  echo $(
-    gcloud compute instances list \
-      --format="value(networkInterfaces[0].accessConfigs[0].natIP)" \
-      --filter="name:gke-$GKE_CLUSTER-$GKE_NODE_POOL*"
-  )
+  if [ "$PRIVATE_CLUSTER" == "false" ]; then
+    echo $(
+      gcloud compute instances list \
+        --format="value(networkInterfaces[0].accessConfigs[0].natIP)" \
+        --filter="name:gke-$GKE_CLUSTER-$GKE_NODE_POOL*"
+    )
+  else
+    echo $(
+      gcloud compute instances list \
+        --format="value(networkInterfaces[0].networkIP)" \
+        --filter="name:gke-$GKE_CLUSTER-$GKE_NODE_POOL*"
+    )
+  fi
 }
 
 function healthCheck() {
