@@ -14,7 +14,7 @@ GKE_NODE_PORT (required) - node port of your ingress controller/edge proxy
 PRIVATE_CLUSTER (optional, default false) - if true it will use the private IPs of the GKE nodes, needs Serverless VPC Access Connector
 NGINX_TIMEOUT (optional, default 30s) - nginx timeout for proxy_pass
 NGINX_PROTOCOL (optional, default http) - nginx protocol for proxy_pass (set to 'https' if your ingress controller/edge proxy is listening over TLS)
-HEALTH_CHECK_TIMEOUT (optional, default 3) - node heath check timeout; if HC fails, node is removed from nginx upstream list until it's back online
+HEALTH_CHECK_TIMEOUT (optional, default 5) - node heath check timeout; if HC fails, node is removed from nginx upstream list until it's back online
 CHECK_INTERVAL (optional, default 30) - seconds between checks of GKE node pool IP changes
 ```
 
@@ -56,7 +56,7 @@ gcloud run deploy run-gke-lb \
 If you have a private GKE cluster, you can create a [Serverless VPC Access Connector](https://cloud.google.com/vpc/docs/configure-serverless-vpc-access) and link it to the `run-gke-lb` Cloud Run service by adding:
 
 ```
-gcloud run deploy run-gke-lb \
+gcloud beta run deploy run-gke-lb \
   ...
   --vpc-connector CONNECTOR_NAME \
   --update-env-vars ... PRIVATE_CLUSTER=true
