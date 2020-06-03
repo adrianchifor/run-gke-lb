@@ -23,6 +23,7 @@ CHECK_INTERVAL (optional, default 30) - seconds between checks of GKE node pool 
 ### Build container
 
 ```
+echo "FROM adrianchifor/run-gke-lb:latest" > Dockerfile
 gcloud builds submit --tag eu.gcr.io/YOUR_PROJECT/run-gke-lb . --project YOUR_PROJECT
 ```
 
