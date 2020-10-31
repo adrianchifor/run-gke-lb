@@ -1,6 +1,6 @@
 # GKE LB on Cloud Run
 
-[![Docker](https://github.com/adrianchifor/run-gke-lb/workflows/Publish%20Docker/badge.svg)](https://github.com/adrianchifor/run-gke-lb/actions?query=workflow%3A%22Publish+Docker%22)
+[![Docker](https://github.com/run-gke-lb/workflows/Publish%20Docker/badge.svg)](https://github.com/adrianchifor/run-gke-lb/actions?query=workflow%3A%22Publish+Docker%22)
 
 Simple, auto-configuring, auto-scaling nginx container acting as a load balancer for your GKE node pool. Expose your GKE ingress controller/edge proxy without paying $18/month for a GCP LB.
 
@@ -25,7 +25,7 @@ CHECK_INTERVAL (optional, default 30) - seconds between checks of GKE node pool 
 ### Build container
 
 ```
-echo "FROM adrianchifor/run-gke-lb:latest" > Dockerfile
+echo "FROM ghcr.io/adrianchifor/run-gke-lb:latest" > Dockerfile
 gcloud builds submit --tag eu.gcr.io/YOUR_PROJECT/run-gke-lb . --project YOUR_PROJECT
 ```
 
