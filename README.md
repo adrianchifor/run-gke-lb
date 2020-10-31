@@ -1,5 +1,7 @@
 # GKE LB on Cloud Run
 
+[![Docker](https://github.com/adrianchifor/run-gke-lb/workflows/Publish%20Docker/badge.svg)](https://github.com/adrianchifor/run-gke-lb/actions?query=workflow%3A%22Publish+Docker%22)
+
 Simple, auto-configuring, auto-scaling nginx container acting as a load balancer for your GKE node pool. Expose your GKE ingress controller/edge proxy without paying $18/month for a GCP LB.
 
 [![Run on Google Cloud](https://deploy.cloud.run/button.svg)](https://deploy.cloud.run)
