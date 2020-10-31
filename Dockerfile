@@ -1,5 +1,7 @@
 FROM google/cloud-sdk:alpine
 
+LABEL org.opencontainers.image.source https://github.com/adrianchifor/run-gke-lb
+
 RUN apk add --no-cache bash curl nginx
 
 RUN curl -L https://github.com/krallin/tini/releases/download/v0.18.0/tini-static -o /bin/tini \
